@@ -44,17 +44,12 @@ THREE.ShaderGodRays = {
 		uniforms: {
 
 			tInput: {
-				type: "t",
 				value: null
 			},
-
 			fStepSize: {
-				type: "f",
 				value: 1.0
 			},
-
 			vSunPositionScreenSpace: {
-				type: "v2",
 				value: new THREE.Vector2( 0.5, 0.5 )
 			}
 
@@ -71,7 +66,7 @@ THREE.ShaderGodRays = {
 
 			"}"
 
-		].join("\n"),
+		].join( "\n" ),
 
 		fragmentShader: [
 
@@ -114,7 +109,7 @@ THREE.ShaderGodRays = {
 					// Accumulate samples, making sure we dont walk past the light source.
 
 					// The check for uv.y < 1 would not be necessary with "border" UV wrap
-					// mode, with a black border colour. I don't think this is currently
+					// mode, with a black border color. I don't think this is currently
 					// exposed by three.js. As a result there might be artifacts when the
 					// sun is to the left, right or bottom of screen as these cases are
 					// not specifically handled.
@@ -157,7 +152,7 @@ THREE.ShaderGodRays = {
 
 			"}"
 
-		].join("\n")
+		].join( "\n" )
 
 	},
 
@@ -171,22 +166,18 @@ THREE.ShaderGodRays = {
 		uniforms: {
 
 			tColors: {
-				type: "t",
 				value: null
 			},
 
 			tGodRays: {
-				type: "t",
 				value: null
 			},
 
 			fGodRayIntensity: {
-				type: "f",
 				value: 0.69
 			},
 
 			vSunPositionScreenSpace: {
-				type: "v2",
 				value: new THREE.Vector2( 0.5, 0.5 )
 			}
 
@@ -203,7 +194,7 @@ THREE.ShaderGodRays = {
 
 			"}"
 
-			].join("\n"),
+			].join( "\n" ),
 
 		fragmentShader: [
 
@@ -226,7 +217,7 @@ THREE.ShaderGodRays = {
 
 			"}"
 
-		].join("\n")
+		].join( "\n" )
 
 	},
 
@@ -241,22 +232,18 @@ THREE.ShaderGodRays = {
 		uniforms: {
 
 			vSunPositionScreenSpace: {
-				type: "v2",
 				value: new THREE.Vector2( 0.5, 0.5 )
 			},
 
 			fAspect: {
-				type: "f",
 				value: 1.0
 			},
 
 			sunColor: {
-				type: "c",
 				value: new THREE.Color( 0xffee00 )
 			},
 
 			bgColor: {
-				type: "c",
 				value: new THREE.Color( 0x000000 )
 			}
 
@@ -273,7 +260,7 @@ THREE.ShaderGodRays = {
 
 			"}"
 
-		].join("\n"),
+		].join( "\n" ),
 
 		fragmentShader: [
 
@@ -301,7 +288,7 @@ THREE.ShaderGodRays = {
 
 			"}"
 
-		].join("\n")
+		].join( "\n" )
 
 	}
 

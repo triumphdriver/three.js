@@ -1,51 +1,82 @@
+import { Vector2 } from '../math/Vector2.js';
+import { Vector3 } from '../math/Vector3.js';
+import { Object3D } from '../core/Object3D.js';
+import { SpriteMaterial } from '../materials/SpriteMaterial.js';
+
 /**
  * @author mikael emtinger / http://gomo.se/
  * @author alteredq / http://alteredqualia.com/
  */
 
-THREE.Sprite = ( function () {
+function Sprite( material ) {
 
-	var vertices = new THREE.Float32Attribute( 3, 3 );
-	vertices.set( [ - 0.5, - 0.5, 0, 0.5, - 0.5, 0, 0.5, 0.5, 0 ] );
+	Object3D.call( this );
 
-	var geometry = new THREE.BufferGeometry();
-	geometry.addAttribute( 'position', vertices );
+	this.type = 'Sprite';
 
-	return function ( material ) {
+	this.material = ( material !== undefined ) ? material : new SpriteMaterial();
 
-		THREE.Object3D.call( this );
+	this.center = new Vector2( 0.5, 0.5 );
 
-		this.geometry = geometry;
-		this.material = ( material !== undefined ) ? material : new THREE.SpriteMaterial();
+}
 
-	};
+Sprite.prototype = Object.assign( Object.create( Object3D.prototype ), {
 
-} )();
+	constructor: Sprite,
 
-THREE.Sprite.prototype = Object.create( THREE.Object3D.prototype );
+	isSprite: true,
 
-/*
- * Custom update matrix
- */
+	raycast: ( function () {
 
-THREE.Sprite.prototype.updateMatrix = function () {
+		var intersectPoint = new Vector3();
+		var worldPosition = new Vector3();
+		var worldScale = new Vector3();
 
-	this.matrix.compose( this.position, this.quaternion, this.scale );
+		return function raycast( raycaster, intersects ) {
 
-	this.matrixWorldNeedsUpdate = true;
+			worldPosition.setFromMatrixPosition( this.matrixWorld );
+			raycaster.ray.closestPointToPoint( worldPosition, intersectPoint );
 
-};
+			worldScale.setFromMatrixScale( this.matrixWorld );
+			var guessSizeSq = worldScale.x * worldScale.y / 4;
 
-THREE.Sprite.prototype.clone = function ( object ) {
+			if ( worldPosition.distanceToSquared( intersectPoint ) > guessSizeSq ) return;
 
-	if ( object === undefined ) object = new THREE.Sprite( this.material );
+			var distance = raycaster.ray.origin.distanceTo( intersectPoint );
 
-	THREE.Object3D.prototype.clone.call( this, object );
+			if ( distance < raycaster.near || distance > raycaster.far ) return;
 
-	return object;
+			intersects.push( {
 
-};
+				distance: distance,
+				point: intersectPoint.clone(),
+				face: null,
+				object: this
 
-// Backwards compatibility
+			} );
 
-THREE.Particle = THREE.Sprite;
+		};
+
+	}() ),
+
+	clone: function () {
+
+		return new this.constructor( this.material ).copy( this );
+
+	},
+
+	copy: function ( source ) {
+
+		Object3D.prototype.copy.call( this, source );
+
+		if ( source.center !== undefined ) this.center.copy( source.center );
+
+		return this;
+
+	}
+
+
+} );
+
+
+export { Sprite };
